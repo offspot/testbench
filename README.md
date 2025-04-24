@@ -129,17 +129,23 @@ Use this only to find out about your setup. You'll get the list of all WiFi devi
 
 You can use it to tweak the *exclude* filters to get a list of devices you'll use with next commands.
 
+https://github.com/user-attachments/assets/d52d1276-1000-4829-a9f5-f18ed65cc4c1
+
 ## `integration`
 
 Always run this when testing a new Hotspot/version to ensure the Hotspot behaves properly with one client or more. Those tests are simple and a failing test is easier to diagnose than JMeter results.
 
 This command is also your way to find out how many concurrent WiFi clients the Hotspot can accept (and sustain to some extent).
 
+https://github.com/user-attachments/assets/729be6c5-735b-4bc4-afdd-31d361509014
+
 ## `perf`
 
 Use this to find out the limit of your Hotspot regarding concurrent access.
 
 The tool connects each requested devices, then runs JMeter and provides very basic statistics. It's up to you to dig into the JMeter results CSV.
+
+https://github.com/user-attachments/assets/b30e1c08-44d7-4654-abcf-ff7ca8ca26fe
 
 ## Notes
 
