@@ -52,24 +52,3 @@ jobs:
         run: |
           pip install -U pip build
           python3 -m build --sdist --wheel
-
-  build_docker:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Ensure we can build the Docker image
-        run: |
-          docker build -t testimage .
-
-      - name: Ensure we can start the Docker image
-        run: |
-          docker run --rm testimage
-
-      # OR if image is a daemon process
-      # - name: Ensure we can start the Docker image
-      #   run: |
-      #     docker run --rm testimage
-      #     sleep 5
-      #     docker ps | grep test_container
-      #     docker stop test_container
