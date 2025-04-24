@@ -2,6 +2,11 @@
 
 A tool to validate Kiwix Hotspot's feature set and performances
 
+[![CodeFactor](https://www.codefactor.io/repository/github/openzim/_python-bootstrap/badge)](https://www.codefactor.io/repository/github/openzim/_python-bootstrap)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![codecov](https://codecov.io/gh/offspot/testbench/branch/main/graph/badge.svg)](https://codecov.io/gh/offspot/testbench)
+![Python Version](https://img.shields.io/badge/Python-3.11-blue)
+
 ## Objectives
 
 - Identify behavioral and performance regressions before release
@@ -59,3 +64,102 @@ These behavior test can be tested from a single interface, serving as integratio
 ### Performance validation
 
 Those consists in an orchestration of parallel tests simulating real traffic from pre-defined scenarios.
+
+## Setup
+
+Assuming a bookworm raspbian host
+
+```sh
+# you'll most likely be using it over SSH
+systemctl enable --now ssh
+
+# update packages
+apt update && apt upgrade
+
+# setup/fix locale (en_US.UTF-8)
+dpkg-reconfigure locales
+
+# set a country for WiFi regulations to apply (mandatory!)
+raspi-config nonint do_wifi_country ML
+
+# Install Apache JMeter
+curl -L -o /tmp/jmeter.tgz https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
+tar --strip-components 1 -C /usr/local -x -f /tmp/jmeter.tgz
+rm -rf /tmp/jmeter.tgz
+```
+
+Install testbench
+
+```sh
+# you'll want to install in isolated virtual env
+python3 -m .venv
+source .venv/bin/activate
+```
+
+```sh
+# should you want a release
+pip install offspot-testbench
+```
+
+```sh
+# using the trunk
+git clone https://github.com/offspot/testbench.git
+pip install -e testbench
+```
+
+Run the testbench
+
+```py
+testbench --help
+```
+
+## Usage
+
+There are three sub-commands to the `testbench` program, serving different needs:
+
+| Command       | Description                                                            |
+| ---           | ---                                                                    |
+| `status`      | Lists the available 802.11 (WiFi) devices available on the host        |
+| `integration` | Runs the integration test-suite in parallel over all requested devices |
+| `perf`        | Runs JMeter Test Plan with all requested devices                       |
+
+### `status`
+
+Use this only to find out about your setup. You'll get the list of all WiFi devices connected.
+
+You can use it to tweak the *exclude* filters to get a list of devices you'll use with next commands.
+
+## `integration`
+
+Always run this when testing a new Hotspot/version to ensure the Hotspot behaves properly with one client or more. Those tests are simple and a failing test is easier to diagnose than JMeter results.
+
+This command is also your way to find out how many concurrent WiFi clients the Hotspot can accept (and sustain to some extent).
+
+## `perf`
+
+Use this to find out the limit of your Hotspot regarding concurrent access.
+
+The tool connects each requested devices, then runs JMeter and provides very basic statistics. It's up to you to dig into the JMeter results CSV.
+
+## Notes
+
+### When in doubt, reboot
+
+You don't want to be in an unknown state, wondering why stuff are not working the way they should.
+
+- After a JMeter crash, reboot host.
+- After a JMeter hang, reboot target.
+
+When you overwhelm an Hotspot, it can freeze due to lack of memory (there's no swap). In this case, even though the Pi light is green, the Pi is not responding and even the ACPI power button is not working. Unplug-replug the target Pi. If the JMX is not timed-out properly, JMeter can hang forever.
+
+### Be cautious with JMX editing
+
+The summary tables post-JMeter are built by reading the results CSV file.
+
+When using your own JMX, make sure not to generate Test Status message that spans multiple lines as the CSV parsing is quite primitive.
+
+---
+
+testbench adheres to openZIM's [Contribution Guidelines](https://github.com/openzim/overview/wiki/Contributing).
+
+testbench has implemented openZIM's [Python bootstrap, conventions and policies](https://github.com/openzim/_python-bootstrap/docs/Policy.md) **v1.0.0**.
