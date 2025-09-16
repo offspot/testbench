@@ -108,7 +108,7 @@ def main() -> int:
                 else f"❌ {result.feedback if result else ''}"
             )
         if all(
-            device_data.get(test_name) and device_data.get(test_name).succeeded
+            device_data.get(test_name) and device_data[test_name].succeeded
             for test_name in tests_names
         ):
             successful_ifnames.append(ifname)

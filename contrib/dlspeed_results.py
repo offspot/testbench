@@ -13,7 +13,8 @@ def format_speed(size: int, duration: int | float, *, bps: bool = False) -> str:
     bps params allow a bits per second output (40mbps)"""
     bytes_per_seconds = size // int(duration)
     if bps:
-        return f"{format_size(bytes_per_seconds *8).lower().replace('bytes', 'b').replace(' ', '')}ps"
+        return f"{format_size(bytes_per_seconds *8).lower() \
+            .replace('bytes', 'b').replace(' ', '')}ps"
     return f"{format_size(bytes_per_seconds)}/s"
 
 
@@ -94,19 +95,22 @@ def main(folder: Path) -> int:
     print(f"Nb. ifaces, {len(ifnames)}")
     print(f"Nb success, {len(ifnames)}")
     print(
-        f"Max speed, {format_speed(download_size, min(durations))}, {format_speed(download_size, min(durations), bps=True)}"
+        f"Max speed, {format_speed(download_size, min(durations))}, "
+        f"{format_speed(download_size, min(durations), bps=True)}"
     )
     print(
-        f"Min speed, {format_speed(download_size, max(durations))}, {format_speed(download_size, max(durations), bps=True)}"
+        f"Min speed, {format_speed(download_size, max(durations))}, "
+        f"{format_speed(download_size, max(durations), bps=True)}"
     )
     print(
-        f"Average speed, {format_speed(download_size, statistics.mean(durations))}, {format_speed(download_size, statistics.mean(durations), bps=True)}"
+        f"Average speed, {format_speed(download_size, statistics.mean(durations))}, "
+        f"{format_speed(download_size, statistics.mean(durations), bps=True)}"
     )
     return 0
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 2:  # noqa: PLR2004
         print(f"Usage {sys.argv[0]} JMETER_OUTPUT_FOLDER")
         sys.exit(1)
     sys.exit(main(folder=Path(sys.argv[1])))

@@ -201,11 +201,11 @@ def prepare_context(raw_args: list[str]) -> None:
 
 
 def main() -> int:
-    debug = Context.debug
+    # debug = Context.debug
     try:
         prepare_context(sys.argv[1:])
         context = Context.get()
-        debug = context.debug
+        # debug = context.debug
 
         # late import as to have an initialized Context
         match context.command:
