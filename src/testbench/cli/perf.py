@@ -50,17 +50,27 @@ def main() -> int:
     with Halo(
         text=f"Connecting {all_wireless_devices.count} devices", spinner="dots"
     ) as spinner:
-        for device in all_wireless_devices.devices:
-            logger.debug(f"Connecting {device.ifname}")
-            assert (  # noqa: S101
-                connect_device(
-                    device.ifname, ssid=context.ssid, passphrase=context.passphrase
-                ).returncode
-                == 0
+        reset_connections()
+        try:
+            for device in all_wireless_devices.devices:
+                logger.debug(f"Connecting {device.ifname}")
+                assert (  # noqa: S101
+                    connect_device(
+                        device.ifname,
+                        ssid=context.ssid,
+                        passphrase=context.passphrase,
+                    ).returncode
+                    == 0
+                )
+            spinner.succeed(  # pyright: ignore[reportUnknownMemberType]
+                f"Connected {all_wireless_devices.count} devices"
             )
-        spinner.succeed(  # pyright: ignore[reportUnknownMemberType]
-            f"Connected {all_wireless_devices.count} devices"
-        )
+        except Exception as exc:
+            spinner.fail(  # pyright: ignore[reportUnknownMemberType]
+                "Unable to connect {all_wireless_devices.count} devices"
+            )
+            reset_connections()
+            raise exc
 
     with Halo(text="Starting JMeter", spinner="dots") as spinner:
 
