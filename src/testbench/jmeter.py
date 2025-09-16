@@ -108,7 +108,7 @@ class JMeterRunner:
 
     def start(self):
         environ = os.environ.copy()
-        environ.update({"JVM_ARGS": "-Xmx2g"})
+        environ.update({"JVM_ARGS": "-Xmx3g"})
         self.started_on = datetime.datetime.now(datetime.UTC)
         args: list[str] = [
             shutil.which("jmeter") or "/usr/bin/jmeter",
