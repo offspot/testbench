@@ -155,6 +155,22 @@ def prepare_context(raw_args: list[str]) -> None:
     )
 
     perf_parser.add_argument(
+        "--ssid",
+        help="SSID of network to connect to (Offspot SSID)",
+        dest="ssid",
+        default=Context.ssid,
+        required=False,
+    )
+
+    perf_parser.add_argument(
+        "--passphrase",
+        help="WPA2 Passphrase of network to connect to",
+        dest="passphrase",
+        default=Context.passphrase,
+        required=False,
+    )
+
+    perf_parser.add_argument(
         "--jmx", help="Path to own JMX file", type=Path, default=None, dest="jmx_path"
     )
 
