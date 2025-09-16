@@ -144,15 +144,36 @@ This command is also your way to find out how many concurrent WiFi clients the H
 
 https://github.com/user-attachments/assets/729be6c5-735b-4bc4-afdd-31d361509014
 
-## `perf`
+## `jmeter`
 
-Use this to find out the limit of your Hotspot regarding concurrent access.
+Use this to find out the performance of your Hotspot regarding concurrent access.
 
 The tool connects each requested devices, then runs JMeter and provides very basic statistics. It's up to you to dig into the JMeter results CSV.
 
 https://github.com/user-attachments/assets/b30e1c08-44d7-4654-abcf-ff7ca8ca26fe
 
+
 ## Notes
+
+### It's fragile
+
+While the goal of this tool is to know whether the system runs within predictable performances, the randomness introduced everywhere means it's unpredictable.
+
+Environment plays a huge role as well.
+
+**Make sure you change the SSID and protect the network**. Unless you're in a faraday cage, chances that random people attempt to connect to the network are significant.
+
+Be aware that not-connected but trying clients may cost you a slot.
+
+### No timeout
+
+There is no default timeout anywhere because some actions leads to incredibly high duration. It's up to you to decide whether it's worth continuing  or not.
+
+Consider checking on the target that network traffic is still happenning:
+
+```sh
+❯ iftop -i wlan0
+```
 
 ### When in doubt, reboot
 
@@ -169,6 +190,28 @@ The summary tables post-JMeter are built by reading the results CSV file.
 
 When using your own JMX, make sure not to generate Test Status message that spans multiple lines as the CSV parsing is quite primitive.
 
+## Development
+
+Obviously, it's easier to work off a real, running device.
+
+```sh
+# switch to root
+❯ sudo su -
+
+# install sshfs and uv
+❯ apt update && apt install -y sshfs curl && curl -LsSf https://astral.sh/uv/install.sh | sh && source $HOME/.local/bin/env && mkdir -p /src
+
+# mount you dev's repo on the Pi [CHANGE THIS]
+❯ sshfs USER@DEVHOST:PATHONDEVHOST /src && cd /src && uv run testbench --help
+# ex: sshfs reg@faku.ylm:src/testbench /src && cd /src && uv run testbench --help
+
+# then start any of the entrypoints
+
+# similar to provisionOS, restarts when requested
+❯ uv run testbench status
+❯ uv run testbench --max-devices 1 integration
+❯ uv run testbench --max-devices 1 jmeter --help
+```
 ---
 
 testbench adheres to openZIM's [Contribution Guidelines](https://github.com/openzim/overview/wiki/Contributing).
