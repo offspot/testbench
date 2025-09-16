@@ -92,6 +92,7 @@ def main() -> int:
             )
         )
 
+    successful_ifnames: list[str] = []
     tests_names = list(runner.results[devices[0].ifname].keys())
     table = PrettyTable(field_names=["Test"])
     table.align["Test"] = "l"
@@ -100,13 +101,24 @@ def main() -> int:
     for ifname, device_data in runner.results.items():
         results: list[str] = []
         for test_name in tests_names:
-            result = device_data[test_name]
-            results.append("✅" if result.succeeded else f"❌ {result.feedback}")
+            result = device_data.get(test_name)
+            results.append(
+                "✅"
+                if result and result.succeeded
+                else f"❌ {result.feedback if result else ''}"
+            )
+        if all(
+            device_data.get(test_name) and device_data.get(test_name).succeeded
+            for test_name in tests_names
+        ):
+            successful_ifnames.append(ifname)
         table.add_column(
             ifname.replace("wlan", "wl"),
             results,
         )
 
     click.echo(table.get_string())  # pyright: ignore [reportUnknownMemberType]
+
+    click.echo(f"Nb. of successful interfaces: {len(successful_ifnames)}")
 
     return 0
