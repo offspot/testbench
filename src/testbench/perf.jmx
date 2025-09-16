@@ -119,7 +119,7 @@
           <stringProp name="HTTPSampler.domain">zim-download.${fqdn}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
-          <stringProp name="HTTPSampler.path">/kiwix-macos_3.8.0.dmg</stringProp>
+          <stringProp name="HTTPSampler.path">/kiwix-macos_3.9.0.dmg</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
