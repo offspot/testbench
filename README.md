@@ -153,6 +153,17 @@ The tool connects each requested devices, then runs JMeter and provides very bas
 https://github.com/user-attachments/assets/b30e1c08-44d7-4654-abcf-ff7ca8ca26fe
 
 
+### basic-http (default)
+
+makes a couple HTTP requests to kiwix-serve and dashboard.
+
+### dl-speed
+
+Downloads a *large* (100MB) file
+
+See `contrib/dlspeed_results.py` to extract results.
+
+
 ## Notes
 
 ### It's fragile
