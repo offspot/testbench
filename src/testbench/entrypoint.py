@@ -215,8 +215,7 @@ def main() -> int:
         return main_prog()
     except Exception as exc:
         logger.error(f"General failure: {exc!s}")
-        if debug:
-            logger.exception(exc)
+        logger.exception(exc)
         return 1
 
 
