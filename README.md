@@ -80,7 +80,12 @@ apt update && apt upgrade
 dpkg-reconfigure locales
 
 # set a country for WiFi regulations to apply (mandatory!)
-raspi-config nonint do_wifi_country ML
+raspi-config nonint do_wifi_country FR
+
+# disable power saving on network interfaces (/!\ important)
+# https://gist.github.com/jcberthon/ea8cfe278998968ba7c5a95344bc8b55
+printf '[connection]\nwifi.powersave = 2\n' > /etc/NetworkManager/conf.d/wifi-powersave-off.conf
+systemctl restart NetworkManager
 
 # Install Apache JMeter
 curl -L -o /tmp/jmeter.tgz https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
