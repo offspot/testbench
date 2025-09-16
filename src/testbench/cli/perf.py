@@ -17,6 +17,10 @@ context = Context.get()
 logger = context.logger
 
 
+def format_percent(value: int, nb_rows: int) -> str:
+    return f"{format_number(value * 100 / nb_rows, 2)}%"
+
+
 @dataclass
 class Result:
     nb_success: int
@@ -150,6 +154,7 @@ def main() -> int:
     click.echo("")
     click.echo("Results by Iface")
 
+    total = {"success": 0, "failure": 0}
     ifnames_table = PrettyTable(
         field_names=["Iface", "Success", "Failure", "Success rate"]
     )
@@ -157,6 +162,16 @@ def main() -> int:
         ifnames_table.add_row(
             [ifname, results.nb_success, results.nb_failed, results.percent]
         )
+        total["success"] += results.nb_success
+        total["failure"] += results.nb_failed
+    ifnames_table.add_row(
+        [
+            "Total",
+            total["success"],
+            total["failure"],
+            format_percent(total["success"], sum(total.values())),
+        ]
+    )
     click.echo(ifnames_table.get_string())  # pyright: ignore [reportUnknownMemberType]
 
     return 0
