@@ -126,7 +126,7 @@ There are three sub-commands to the `testbench` program, serving different needs
 | ---           | ---                                                                    |
 | `status`      | Lists the available 802.11 (WiFi) devices available on the host        |
 | `integration` | Runs the integration test-suite in parallel over all requested devices |
-| `perf`        | Runs JMeter Test Plan with all requested devices                       |
+| `jmeter`        | Runs JMeter Test Plan with all requested devices                       |
 
 ### `status`
 

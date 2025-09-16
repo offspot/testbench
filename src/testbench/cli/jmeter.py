@@ -71,7 +71,7 @@ def main() -> int:
             )
         except Exception as exc:
             spinner.fail(  # pyright: ignore[reportUnknownMemberType]
-                "Unable to connect {all_wireless_devices.count} devices"
+                f"Unable to connect {all_wireless_devices.count} devices"
             )
             reset_connections()
             raise exc
@@ -110,9 +110,7 @@ def main() -> int:
         )
 
     if not jmeter.succeeded:
-        return jmeter.ps.returncode
-
-    click.echo(f"Results in {jmeter.results_csv_path}")
+        return jmeter.ps.returncode or 1
 
     def get_ifname_from_threadname(name: str) -> str:
         m = re.match(r"Users 1-(?P<num>\d+){1,2}", name)
@@ -173,5 +171,9 @@ def main() -> int:
         ]
     )
     click.echo(ifnames_table.get_string())  # pyright: ignore [reportUnknownMemberType]
+
+    click.echo(
+        f"Results in {jmeter.results_csv_path} ({jmeter.results_csv_path.parent.name})"
+    )
 
     return 0
