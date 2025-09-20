@@ -5,10 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "offspot-testbench"
 # meant to run on raspbian (current is 3.11.2)
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.11,<3.12"
 description = "Offspot testbench utils"
 readme = "README.md"
 dependencies = [
+    "attrs==25.3.0",
     "icmplib==3.0.4",
     "nmcli==1.5.0",
     "types-requests>=2.32.0.20250328",
@@ -56,6 +57,7 @@ testbench = "testbench.entrypoint:entrypoint"
 list-devices = "testbench.hw:entrypoint"
 max-wlan = "testbench.wlan:entrypoint"
 disconnect-all = "testbench.wlan:disconnect_all_devices"
+stream = "testbench.scripts.entrypoints:stream"
 
 [tool.hatch.version]
 path = "src/testbench/__about__.py"

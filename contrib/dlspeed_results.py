@@ -6,21 +6,7 @@ from pathlib import Path
 
 from humanfriendly import format_size
 
-
-def format_speed(size: int, duration: int | float, *, bps: bool = False) -> str:
-    """5MB/s like formatting of speed from size (bytes) and duration (seconds)
-
-    bps params allow a bits per second output (40mbps)"""
-    bytes_per_seconds = size // int(duration)
-    if bps:
-        return (
-            format_size(bytes_per_seconds * 8)
-            .lower()
-            .replace("bytes", "b")
-            .replace(" ", "")
-            + "ps"
-        )
-    return f"{format_size(bytes_per_seconds)}/s"
+from testbench.utils.misc import format_speed
 
 
 def get_ifnames(fpath: Path) -> list[str]:

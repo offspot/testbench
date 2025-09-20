@@ -87,6 +87,12 @@ raspi-config nonint do_wifi_country FR
 printf '[connection]\nwifi.powersave = 2\n' > /etc/NetworkManager/conf.d/wifi-powersave-off.conf
 systemctl restart NetworkManager
 
+# install ffprobe (to get durations of videos)
+curl -L -O https://johnvansickle.com/ffmpeg/releases/ffmpeg-7.0.2-arm64-static.tar.xz
+tar xf ffmpeg-7.0.2-arm64-static.tar.xz
+mv ffmpeg-7.0.2-arm64-static/ffprobe /usr/local/bin/
+rm -rf ./ffmpeg-7.0.2-arm64-static*
+
 # Install Apache JMeter
 curl -L -o /tmp/jmeter.tgz https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
 tar --strip-components 1 -C /usr/local -x -f /tmp/jmeter.tgz
