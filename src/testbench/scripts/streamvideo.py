@@ -71,7 +71,9 @@ class DataResult(NamedTuple):
     @property
     def succeeded(self) -> bool:
         return (
-            self.exception is None and self.code is not None and 200 <= self.code <= 299
+            self.exception is None
+            and self.code is not None
+            and 200 <= self.code <= 299  # noqa: PLR2004
         )
 
     @property
@@ -268,8 +270,12 @@ class VideoPlayer:
 
         self.play_thread = Thread(target=self.play_in_bg)
 
-        self.download_started_on: datetime.datetime = None
-        self.download_completed_on: datetime.datetime = None
+        self.download_started_on: datetime.datetime = (
+            None  # pyright: ignore [reportAttributeAccessIssue]
+        )
+        self.download_completed_on: datetime.datetime = (
+            None  # pyright: ignore [reportAttributeAccessIssue]
+        )
 
         self.lock = Lock()
 
@@ -347,7 +353,9 @@ class VideoPlayer:
 
         print(
             f"Average speed: "
-            f"{format_speed(self.filesize, self.download_duration, bps=True)}"
+            f"{format_speed(self.received_data, self.download_duration, bps=True)} "
+            f"{format_size(self.received_data)} in "
+            f"{format_timespan(self.download_duration)}"
         )
         print(f"Played: {format_timespan(self.played_duration)}")
         print(f"Frozed for: {format_timespan(self.frozen_duration)}")
@@ -367,7 +375,6 @@ def stream_video(
     service_url: str,
     content_id: str,
     video_slug: str,
-    use_206_chunks: bool = False,
 ) -> int:
 
     reqinfo = VideoRequestInfo.from_slug(
@@ -384,6 +391,7 @@ def stream_video(
     player = VideoPlayer(
         filesize=reqinfo.video_filesize, duration=reqinfo.video_duration
     )
+    player.download(0)  # set download start time
 
     try:
         resp = reqinfo.session.request(
@@ -392,7 +400,8 @@ def stream_video(
             timeout=DEFAULT_TIMEOUT,
             preload_content=False,
         )
-        assert resp.status in (HTTPStatus.OK, HTTPStatus.PARTIAL_CONTENT)
+        if resp.status not in (HTTPStatus.OK, HTTPStatus.PARTIAL_CONTENT):
+            raise OSError(f"Unexpected HTTP code: {resp.status}: {resp.reason}")
     except Exception as exc:
         print(f"request exception: {exc}")
         logger.exception(exc)
