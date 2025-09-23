@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "offspot-testbench"
 # meant to run on raspbian (current is 3.11.2)
-requires-python = ">=3.11,<3.12"
+requires-python = ">=3.11,<3.14"
 description = "Offspot testbench utils"
 readme = "README.md"
 dependencies = [
@@ -88,7 +88,7 @@ features = ["dev"]
 features = ["scripts", "test"]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11"]
+python = ["3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.test.scripts]
 run = "inv test --args '{args}'"
