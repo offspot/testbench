@@ -86,17 +86,24 @@ def main(folder: Path) -> int:
     print(f"Nb. ifaces, {len(ifnames)}")
     print(f"Nb success, {len(ifnames)}")
     print(
-        f"Max speed, {format_speed(download_size, min(durations))}, "
-        f"{format_speed(download_size, min(durations), bps=True)}"
+        f"Average speed: {format_speed(download_size, statistics.mean(durations))} "
+        f"({format_speed(download_size, statistics.mean(durations), bps=True)})"
     )
     print(
-        f"Min speed, {format_speed(download_size, max(durations))}, "
-        f"{format_speed(download_size, max(durations), bps=True)}"
+        f"Max speed: {format_speed(download_size, min(durations))} "
+        f"({format_speed(download_size, min(durations), bps=True)})"
     )
     print(
-        f"Average speed, {format_speed(download_size, statistics.mean(durations))}, "
-        f"{format_speed(download_size, statistics.mean(durations), bps=True)}"
+        f"Min speed: {format_speed(download_size, max(durations))} "
+        f"({format_speed(download_size, max(durations), bps=True)})"
     )
+    if not failure_ifnames:
+        comb_size = download_size * len(ifnames)
+        print(
+            f"Combined~ throughput: "
+            f"{format_speed(comb_size, statistics.mean(durations))} "
+            f"({format_speed(comb_size, statistics.mean(durations), bps=True)})"
+        )
     return 0
 
 
