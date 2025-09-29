@@ -68,7 +68,7 @@ def main(folder: Path) -> int:
         return ifnames[num - 1]
 
     failure_ifnames: list[str] = []
-    durations: list[int] = []
+    durations: list[float] = []
 
     # get download
     with open(folder.joinpath("results.csv")) as fh:
