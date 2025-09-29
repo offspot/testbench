@@ -89,6 +89,7 @@ class JMeterRunner:
         dns_server: str | None = None,
         assume_online: str | None = None,
         content_id: str | None = None,
+        user_values: dict[str, str] | None = None,
         workdir: Path | None = None,
     ):
         self.jmx = jmx
@@ -99,6 +100,7 @@ class JMeterRunner:
         self.dns_server = dns_server
         self.assume_online = assume_online
         self.content_id = content_id
+        self.user_values = user_values or {}
         self.workdir = workdir or get_workdir()
         self.write_ifnames()
         self.started_on = self.ended_on = datetime.datetime.now(datetime.UTC)
@@ -126,6 +128,10 @@ class JMeterRunner:
         ):
             if getattr(self, key):
                 args.append(f"-J{key}={getattr(self, key)}")
+
+        for key, value in self.user_values.items():
+            args.append(f"-J{key}={value}")
+
         self.ps = subprocess.Popen(
             args=args,
             cwd=self.workdir,

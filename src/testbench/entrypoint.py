@@ -193,10 +193,28 @@ def prepare_context(raw_args: list[str]) -> None:
         required=False,
     )
 
+    def kvt(key_value: str) -> tuple[str, str]:
+        try:
+            parts = [item.strip() for item in key_value.split(":", 1)]
+            return parts[0], parts[1]
+        except Exception as exc:
+            raise argparse.ArgumentTypeError("Invalid format for key:value") from exc
+
+    jmeter_parser.add_argument(
+        "--kv",
+        action="append",
+        default=[],
+        type=kvt,
+        help="key:value pairs of User Defined Variables, passed to JMeter",
+        dest="user_values",
+        required=False,
+    )
+
     args = parser.parse_args(raw_args)
     # ignore unset values in order to not override Context defaults
     args_dict = {key: value for key, value in args._get_kwargs() if value}
 
+    args_dict["user_values"] = dict(args_dict.get("user_values", []))
     Context.setup(**args_dict)
 
 

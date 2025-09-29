@@ -56,16 +56,20 @@ def main() -> int:
     ) as spinner:
         reset_connections()
         try:
-            for device in all_wireless_devices.devices:
+            for index, device in enumerate(all_wireless_devices.devices):
                 logger.debug(f"Connecting {device.ifname}")
-                assert (  # noqa: S101
+                if (
                     connect_device(
                         device.ifname,
                         ssid=context.ssid,
                         passphrase=context.passphrase,
                     ).returncode
-                    == 0
-                )
+                    != 0
+                ):
+                    raise OSError(
+                        f"Unable to connect {device.ifname} "
+                        f"[{index}/{len(all_wireless_devices.devices)}]"
+                    )
             spinner.succeed(  # pyright: ignore[reportUnknownMemberType]
                 f"Connected {all_wireless_devices.count} devices"
             )
@@ -83,6 +87,7 @@ def main() -> int:
             ifnames=[device.ifname for device in all_wireless_devices.devices],
             assume_online="true" if context.assume_online else "false",
             content_id=context.content_id,
+            user_values=context.user_values,
         )
         jmeter.start()
         spinner.succeed(  # pyright: ignore[reportUnknownMemberType]

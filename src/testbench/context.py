@@ -72,6 +72,7 @@ class Context:
     dns_captured_address: IPv4Address = DEFAULT_DNS_CAPTURED_DOMAIN_IP
     assume_online: bool = DEFAULT_ASSUME_ONLINE
     content_id: str = DEFAULT_CONTENT_ID
+    user_values: dict[str, str] = field(default_factory=dict[str, str])
 
     logger: logging.Logger = logging.getLogger(NAME)  # noqa: RUF009
 
