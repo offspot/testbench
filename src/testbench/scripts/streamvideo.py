@@ -431,7 +431,9 @@ def stream_video(
     canceled = False
 
     try:
-        data = resp._raw_read(amt=initial_bufsize)
+        data = resp._raw_read(  # pyright: ignore [reportPrivateUsage]
+            amt=initial_bufsize
+        )
     except Exception as exc:
         canceled = True
         logger.error(f"Failed to read data: {exc}")
@@ -446,7 +448,7 @@ def stream_video(
                 player.play()
             player.print_status()
 
-            data = resp._raw_read(amt=bufsize)
+            data = resp._raw_read(amt=bufsize)  # pyright: ignore [reportPrivateUsage]
         except Exception as exc:
             canceled = True
             logger.error(f"Failed to read data: {exc}")

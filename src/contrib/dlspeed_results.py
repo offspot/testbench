@@ -53,6 +53,7 @@ def get_curl_downloadspeed(folder: Path, ifname: str) -> int:
     for line in reversed(lines):
         if m := dlspeed_re.match(line.strip()):
             return int(m.groupdict()["value"])
+    return -1
 
 
 def main(folder: Path) -> int:

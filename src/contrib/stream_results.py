@@ -2,31 +2,15 @@ import csv
 import re
 import statistics
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import attr
-from humanfriendly import format_size, format_timespan, parse_size, parse_timespan
+from humanfriendly import format_size, format_timespan
 
 from contrib.common import get_ifnames
 from testbench.utils.misc import StreamExitCodes, format_speed
-
-
-def get_curl_downloadspeed(folder: Path, ifname: str) -> int:
-    dlspeed_re = re.compile(r"^downloadspeed:\s(?P<value>\d+)\sbyte/sec$")
-    fpath = folder.joinpath(f"curl-{ifname}.txt")
-    lines = fpath.read_text().splitlines()
-    for line in reversed(lines):
-        if m := dlspeed_re.match(line.strip()):
-            return int(m.groupdict()["value"])
-
-
-# Video size: 13.57 MB
-# Video duration: 14 minutes and 48 seconds
-# Downloaded: 100% of 13.57 MB
-# Average speed: 3.88mbps 13.57 MB in 28.71 seconds
-# Played: 29 seconds
-# Frozed for: 0 seconds
 
 
 @attr.define
