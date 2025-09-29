@@ -51,8 +51,14 @@
           </elementProp>
           <elementProp name="content_id" elementType="Argument">
             <stringProp name="Argument.name">content_id</stringProp>
-            <stringProp name="Argument.value">${__P(content_id,openzim_wikipedia_en_top_nopic)}</stringProp>
-            <stringProp name="Argument.desc">Hotspot ident for content to query</stringProp>
+            <stringProp name="Argument.value">${__P(content_id,mali-pour-les-nuls_fr_all_2025-09)}</stringProp>
+            <stringProp name="Argument.desc">Hotspot ident for ZIM to query (must be a youtube2zim-made ZIM)</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="video_id" elementType="Argument">
+            <stringProp name="Argument.name">video_id</stringProp>
+            <stringProp name="Argument.value">${__P(video_id,le_paludisme_lmpln_6-qbO7)}</stringProp>
+            <stringProp name="Argument.desc">youtube2zim video ID of the video to stream</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -109,7 +115,17 @@
               </elementProp>
               <elementProp name="" elementType="Argument">
                 <stringProp name="Argument.name"></stringProp>
-                <stringProp name="Argument.value">le_paludisme_lmpln_6-qbO7</stringProp>
+                <stringProp name="Argument.value">${video_id}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Argument">
+                <stringProp name="Argument.name"></stringProp>
+                <stringProp name="Argument.value">--content-id</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Argument">
+                <stringProp name="Argument.name"></stringProp>
+                <stringProp name="Argument.value">${content_id}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -124,7 +140,7 @@
           <Summariser guiclass="SummariserGui" testclass="Summariser" testname="Generate Summary Results"/>
           <hashTree/>
         </hashTree>
-        <DNSCacheManager guiclass="DNSCachePanel" testclass="DNSCacheManager" testname="DNS Cache Manager">
+        <DNSCacheManager guiclass="DNSCachePanel" testclass="DNSCacheManager" testname="DNS Cache Manager" enabled="true">
           <collectionProp name="DNSCacheManager.servers">
             <stringProp name="-79885491">${dns_server}</stringProp>
           </collectionProp>
@@ -209,15 +225,6 @@
         </objProp>
         <stringProp name="filename">results-debug.xml</stringProp>
       </ResultCollector>
-      <hashTree/>
-      <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file">
-        <stringProp name="FileSaver.filename"></stringProp>
-        <boolProp name="FileSaver.errorsonly">false</boolProp>
-        <boolProp name="FileSaver.successonly">false</boolProp>
-        <boolProp name="FileSaver.skipsuffix">false</boolProp>
-        <boolProp name="FileSaver.skipautonumber">false</boolProp>
-        <boolProp name="FileSaver.addTimstamp">true</boolProp>
-      </ResultSaver>
       <hashTree/>
     </hashTree>
   </hashTree>

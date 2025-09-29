@@ -13,16 +13,11 @@ from urllib3.response import BaseHTTPResponse
 
 from testbench.context import Context
 from testbench.utils.http import DEFAULT_TIMEOUT, get_session_for
-from testbench.utils.misc import format_speed
+from testbench.utils.misc import StreamExitCodes, format_speed
 from testbench.utils.wlan import WirelessDevice
 
 context = Context.get()
 logger = context.logger
-
-RC_NO_DURATION = 3
-RC_MINOR_FREEZE = 4
-RC_MAJOR_FREEZE = 5
-RC_NETWORK_ERROR = 6
 
 
 def get_video_duration(data: bytes) -> float:
@@ -260,6 +255,9 @@ class VideoPlayer:
 
         self.played_duration: float = 0
         self.frozen_duration: float = 0
+        self.started_on: datetime.datetime = (
+            None  # pyright: ignore [reportAttributeAccessIssue]
+        )
 
         self.received_data = 0
         self.available_data = 0
@@ -355,10 +353,17 @@ class VideoPlayer:
             f"Average speed: "
             f"{format_speed(self.received_data, self.download_duration, bps=True)} "
             f"{format_size(self.received_data)} in "
-            f"{format_timespan(self.download_duration)}"
+            f"{format_timespan(self.download_duration)} "
+            f"({self.received_data} -- {self.download_duration})"
         )
-        print(f"Played: {format_timespan(self.played_duration)}")
-        print(f"Frozed for: {format_timespan(self.frozen_duration)}")
+        print(
+            f"Played: {format_timespan(self.played_duration)} "
+            f"({self.played_duration})"
+        )
+        print(
+            f"Frozed for: {format_timespan(self.frozen_duration)} "
+            f"({self.frozen_duration})"
+        )
 
     @property
     def completed(self) -> bool:
@@ -376,6 +381,11 @@ def stream_video(
     content_id: str,
     video_slug: str,
 ) -> int:
+
+    print(f"{ifname=}")
+    print(f"{service_url=}")
+    print(f"{content_id=}")
+    print(f"{video_slug=}")
 
     reqinfo = VideoRequestInfo.from_slug(
         ifname=ifname,
@@ -407,29 +417,54 @@ def stream_video(
         logger.exception(exc)
         return 1
 
-    print(f"Video size: {format_size(reqinfo.video_filesize)}")
-    print(f"Video duration: {format_timespan(reqinfo.video_duration)}")
+    print(
+        f"Video size: {format_size(reqinfo.video_filesize)} "
+        f"({reqinfo.video_filesize})"
+    )
+    print(
+        f"Video duration: {format_timespan(reqinfo.video_duration)} "
+        f"({reqinfo.video_duration})"
+    )
     print("Content-Length", resp.headers.get("Content-Length"))
     print(f"initial buffer: {initial_bufsize}")
     print(f"regular buffer: {bufsize}")
+    canceled = False
 
-    initbufdata = resp.read(amt=initial_bufsize)
-    player.download(len(initbufdata))
+    try:
+        data = resp._raw_read(amt=initial_bufsize)
+    except Exception as exc:
+        canceled = True
+        logger.error(f"Failed to read data: {exc}")
+        logger.exception(exc)
+        return StreamExitCodes.NETWORK_ERROR
 
-    player.play()
-    while data := resp.read(amt=bufsize):
-        player.download(len(data))
-        player.print_status()
+    while data and not canceled:
+
+        try:
+            player.download(len(data))
+            if not player.started_on:
+                player.play()
+            player.print_status()
+
+            data = resp._raw_read(amt=bufsize)
+        except Exception as exc:
+            canceled = True
+            logger.error(f"Failed to read data: {exc}")
+            logger.exception(exc)
+            player.stop()
 
     player.stop()
     player.print_status()
+
+    if canceled:
+        return StreamExitCodes.NETWORK_ERROR
 
     if player.frozen_duration == 0:
         return 0
 
     if player.frozen_duration > (player.played_duration * 0.1):
-        return RC_MAJOR_FREEZE
+        return StreamExitCodes.MAJOR_FREEZE
     elif player.frozen_duration:
-        return RC_MINOR_FREEZE
+        return StreamExitCodes.MINOR_FREEZE
 
-    return 0
+    return StreamExitCodes.OK

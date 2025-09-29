@@ -1,4 +1,14 @@
+import enum
+
 from humanfriendly import format_size
+
+
+class StreamExitCodes(enum.IntEnum):
+    OK = 0
+    NO_DURATION = 3
+    MINOR_FREEZE = 4
+    MAJOR_FREEZE = 5
+    NETWORK_ERROR = 6
 
 
 def format_speed(size: int, duration: int | float, *, bps: bool = False) -> str:
