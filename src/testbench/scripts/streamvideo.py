@@ -380,12 +380,14 @@ def stream_video(
     service_url: str,
     content_id: str,
     video_slug: str,
+    play_duration: int = 0,
 ) -> int:
 
     print(f"{ifname=}")
     print(f"{service_url=}")
     print(f"{content_id=}")
     print(f"{video_slug=}")
+    print(f"{play_duration=}")
 
     reqinfo = VideoRequestInfo.from_slug(
         ifname=ifname,
@@ -446,7 +448,10 @@ def stream_video(
             player.download(len(data))
             if not player.started_on:
                 player.play()
-            player.print_status()
+            # player.print_status()
+            if play_duration and player.played_duration >= play_duration:
+                print(f"Reached play_duration: {player.played_duration}")
+                break
 
             data = resp._raw_read(amt=bufsize)  # pyright: ignore [reportPrivateUsage]
         except Exception as exc:

@@ -105,7 +105,6 @@ def main(folder: Path) -> int:
 
 
 if __name__ == "__main__":
-
     if len(sys.argv) != 2:  # noqa: PLR2004
         print(f"Usage {sys.argv[0]} JMETER_OUTPUT_FOLDER")
         sys.exit(1)

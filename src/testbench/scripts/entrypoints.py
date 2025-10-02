@@ -1,6 +1,10 @@
 import argparse
 import sys
+from pathlib import Path
 
+from testbench.cli.randterm import KINDS as RANDTERM_KINDS
+from testbench.cli.randterm import gen_suggestions
+from testbench.cli.randterm import main as randterm_main
 from testbench.context import Context
 
 logger = Context.logger
@@ -21,6 +25,16 @@ def stream():
         help="ZIM ID for video",
         dest="content_id",
         default="mali-pour-les-nuls_fr_all",
+    )
+    parser.add_argument(
+        "--play-duration",
+        help=(
+            "Stop after this duration (seconds) playing. "
+            "If not set, stops once download is complete"
+        ),
+        type=int,
+        default=0,
+        dest="play_duration",
     )
     parser.add_argument(help="Video slug in ZIM", dest="video_slug")
 
