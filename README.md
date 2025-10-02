@@ -118,6 +118,14 @@ git clone https://github.com/offspot/testbench.git
 pip install -e testbench
 ```
 
+Download words list (used in search queries)
+
+```sh
+# assuming code in /src
+mkdir -p /src/src/data/
+curl -L -O /src/src/data/words.txt https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_alpha.txt
+```
+
 Run the testbench
 
 ```py

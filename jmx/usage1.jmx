@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="usage1">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="protocol" elementType="Argument">
+            <stringProp name="Argument.name">protocol</stringProp>
+            <stringProp name="Argument.value">http</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="fqdn" elementType="Argument">
+            <stringProp name="Argument.name">fqdn</stringProp>
+            <stringProp name="Argument.value">${__P(fqdn,kiwix.hotspot)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">Hotspot FQDN (kiwix.hotspot usually)</stringProp>
+          </elementProp>
+          <elementProp name="port" elementType="Argument">
+            <stringProp name="Argument.name">port</stringProp>
+            <stringProp name="Argument.value">${__P(port,80)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="nb_users" elementType="Argument">
+            <stringProp name="Argument.name">nb_users</stringProp>
+            <stringProp name="Argument.value">${__P(nb_users,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">Nb of users to fake (see ifnames.csv CSV Data Set)</stringProp>
+          </elementProp>
+          <elementProp name="dns_server" elementType="Argument">
+            <stringProp name="Argument.name">dns_server</stringProp>
+            <stringProp name="Argument.value">${__P(dns_server,192.168.2.1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">DNS server to use (Hotspot IP)</stringProp>
+          </elementProp>
+          <elementProp name="kiwix_domain" elementType="Argument">
+            <stringProp name="Argument.name">kiwix_domain</stringProp>
+            <stringProp name="Argument.value">${__P(kiwix_domain,browse)}</stringProp>
+            <stringProp name="Argument.desc">Subdomain of kiwix instance (browse)</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="assume_online" elementType="Argument">
+            <stringProp name="Argument.name">assume_online</stringProp>
+            <stringProp name="Argument.value">${__P(assume_online,false)}</stringProp>
+            <stringProp name="Argument.desc">Whether target Hotspot is assumed to be online or not</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="content_id" elementType="Argument">
+            <stringProp name="Argument.name">content_id</stringProp>
+            <stringProp name="Argument.value">${__P(content_id,openzim_wikipedia_en_top_nopic)}</stringProp>
+            <stringProp name="Argument.desc">Hotspot ident for content to query</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="video_content_id" elementType="Argument">
+            <stringProp name="Argument.name">video_content_id</stringProp>
+            <stringProp name="Argument.value">${__P(video_content_id,mali-pour-les-nuls_fr_all)}</stringProp>
+            <stringProp name="Argument.desc">Hotspot ident for content containing videos (must be youtube2zim made)</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="nb_parallel_reqs" elementType="Argument">
+            <stringProp name="Argument.name">nb_parallel_reqs</stringProp>
+            <stringProp name="Argument.value">${__P(nb_parallel_reqs,6)}</stringProp>
+            <stringProp name="Argument.desc">Nb of parallel HTTP requests (typical web browser is 6)</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="nb_pages_per_user" elementType="Argument">
+            <stringProp name="Argument.name">nb_pages_per_user</stringProp>
+            <stringProp name="Argument.value">${__P(nb_pages_per_user,20)}</stringProp>
+            <stringProp name="Argument.desc">Nb of pages (articles) a user reads for text users</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="read_min_ms" elementType="Argument">
+            <stringProp name="Argument.name">read_min_ms</stringProp>
+            <stringProp name="Argument.value">${__P(read_min_ms,1000)}</stringProp>
+            <stringProp name="Argument.desc">Minimum article/page “read” duration (part of random). In milliseconds</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="read_max_ms" elementType="Argument">
+            <stringProp name="Argument.name">read_max_ms</stringProp>
+            <stringProp name="Argument.value">${__P(read_max_ms,60000)}</stringProp>
+            <stringProp name="Argument.desc">Maximum article/page “read” duration (part of random). In milliseconds</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="nb_videos_per_user" elementType="Argument">
+            <stringProp name="Argument.name">nb_videos_per_user</stringProp>
+            <stringProp name="Argument.value">${__P(nb_videos_per_user,3)}</stringProp>
+            <stringProp name="Argument.desc">Nb of videos to stream for video users</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="stream_min_seconds" elementType="Argument">
+            <stringProp name="Argument.name">stream_min_seconds</stringProp>
+            <stringProp name="Argument.value">${__P(stream_min_seconds,5)}</stringProp>
+            <stringProp name="Argument.desc">Minimum playing duration (part of random). In seconds</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="stream_max_seconds" elementType="Argument">
+            <stringProp name="Argument.name">stream_max_seconds</stringProp>
+            <stringProp name="Argument.value">${__P(stream_max_seconds,180)}</stringProp>
+            <stringProp name="Argument.desc">Maximum playing duration (part of random). In seconds</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="search_min_ms" elementType="Argument">
+            <stringProp name="Argument.name">search_min_ms</stringProp>
+            <stringProp name="Argument.value">${__P(search_min_ms,1000)}</stringProp>
+            <stringProp name="Argument.desc">Minimum duration (part of random) inside search result page. In milliseconds</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="search_max_ms" elementType="Argument">
+            <stringProp name="Argument.name">search_max_ms</stringProp>
+            <stringProp name="Argument.value">${__P(search_max_ms,10000)}</stringProp>
+            <stringProp name="Argument.desc">Maximum duration (part of random) inside search result page. In milliseconds</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="actions" elementType="Argument">
+            <stringProp name="Argument.name">actions</stringProp>
+            <stringProp name="Argument.value">read|suggest|search</stringProp>
+            <stringProp name="Argument.desc">Possible actions for user</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="action_read" elementType="Argument">
+            <stringProp name="Argument.name">action_read</stringProp>
+            <stringProp name="Argument.value">read</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="action_suggest" elementType="Argument">
+            <stringProp name="Argument.name">action_suggest</stringProp>
+            <stringProp name="Argument.value">suggest</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="action_search" elementType="Argument">
+            <stringProp name="Argument.name">action_search</stringProp>
+            <stringProp name="Argument.value">search</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="nb_suggestion_attempts" elementType="Argument">
+            <stringProp name="Argument.name">nb_suggestion_attempts</stringProp>
+            <stringProp name="Argument.value">${__P(nb_suggestion_attempts,3)}</stringProp>
+            <stringProp name="Argument.desc">Nb of terms to query suggestion for when testing suggestions</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
+        <stringProp name="filename">ifnames.csv</stringProp>
+        <stringProp name="fileEncoding"></stringProp>
+        <stringProp name="variableNames"></stringProp>
+        <boolProp name="ignoreFirstLine">true</boolProp>
+        <stringProp name="delimiter">,</stringProp>
+        <boolProp name="quotedData">false</boolProp>
+        <boolProp name="recycle">true</boolProp>
+        <boolProp name="stopThread">false</boolProp>
+        <stringProp name="shareMode">shareMode.all</stringProp>
+      </CSVDataSet>
+      <hashTree/>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+        <stringProp name="HTTPSampler.concurrentPool">${nb_parallel_reqs}</stringProp>
+        <stringProp name="HTTPSampler.ipSource">${ifname}</stringProp>
+        <stringProp name="HTTPSampler.domain">${fqdn}</stringProp>
+        <stringProp name="HTTPSampler.port">${port}</stringProp>
+        <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+        <stringProp name="HTTPSampler.path">/</stringProp>
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <intProp name="HTTPSampler.ipSourceType">2</intProp>
+        <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <DNSCacheManager guiclass="DNSCachePanel" testclass="DNSCacheManager" testname="DNS Cache Manager">
+        <collectionProp name="DNSCacheManager.servers">
+          <stringProp name="55966934">192.168.2.1</stringProp>
+        </collectionProp>
+        <collectionProp name="DNSCacheManager.hosts"/>
+        <boolProp name="DNSCacheManager.clearEachIteration">true</boolProp>
+        <boolProp name="DNSCacheManager.isCustomResolver">true</boolProp>
+      </DNSCacheManager>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users">
+        <stringProp name="ThreadGroup.num_threads">${nb_users}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${nb_users}</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Query dashboard" enabled="true">
+          <stringProp name="TestPlan.comments">Access Hotspot Dashboard</stringProp>
+          <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${fqdn}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+          <stringProp name="HTTPSampler.path">/</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200 OK">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message">not 200</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+            <stringProp name="Assertion.scope">all</stringProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract ZIM content-ID" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">extracted_wiki_content_id</stringProp>
+            <stringProp name="RegexExtractor.regex">href=&quot;//(.+)/viewer#(.+)&quot;</stringProp>
+            <stringProp name="RegexExtractor.template">$2$</stringProp>
+            <stringProp name="RegexExtractor.default">CONTENT-ID-NOT-FOUND</stringProp>
+            <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+            <stringProp name="RegexExtractor.match_number">0</stringProp>
+            <stringProp name="Scope.variable">content_href</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract ZIM FQDN" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">as_document</stringProp>
+            <stringProp name="RegexExtractor.refname">extracted_wiki_fqdn</stringProp>
+            <stringProp name="RegexExtractor.regex">href=&quot;//(.+)/viewer#(.+)&quot;</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">WIKI-FQDN-NOT-FOUND</stringProp>
+            <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+            <stringProp name="RegexExtractor.match_number">0</stringProp>
+            <stringProp name="Scope.variable">content_href</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+        </hashTree>
+        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Set content ID and FQDN from extracted data" enabled="true">
+          <stringProp name="BeanShellSampler.query">vars.put(&quot;wiki_fqdn&quot;, vars.get(&quot;extracted_wiki_fqdn&quot;));
+vars.put(&quot;wiki_content_id&quot;, vars.get(&quot;extracted_wiki_content_id&quot;));</stringProp>
+        </BeanShellSampler>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ZIM home" enabled="true">
+          <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${wiki_fqdn}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+          <stringProp name="HTTPSampler.path">${wiki_content_id}</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200/302 OK">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+              <stringProp name="50549">302</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message">not 200 nor 302</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">34</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">0</stringProp>
+        </TestAction>
+        <hashTree>
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
+            <stringProp name="ConstantTimer.delay">${read_min_ms}</stringProp>
+            <stringProp name="RandomTimer.range">${read_max_ms}</stringProp>
+          </UniformRandomTimer>
+          <hashTree/>
+        </hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Video">
+          <stringProp name="IfController.condition">${__groovy(&quot;${group30}&quot;==&quot;true&quot;)}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get channel JSON">
+            <stringProp name="HTTPSampler.domain">${wiki_fqdn}</stringProp>
+            <stringProp name="HTTPSampler.path">/content/${video_content_id}/channel.json</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract playlist ID" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">extracted_first_playlist_slug</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">firstPlaylist</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+              <stringProp name="TestPlan.comments">Extract slug of first playlist (the one containing all videos) from channel.json</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">FIRST-PLAYLIST-MISSING</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Set playlist ID extracted data">
+            <stringProp name="BeanShellSampler.query">vars.put(&quot;first_playlist_slug&quot;, vars.get(&quot;extracted_first_playlist_slug&quot;));
+</stringProp>
+          </BeanShellSampler>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop on videos">
+            <stringProp name="LoopController.loops">${nb_videos_per_user}</stringProp>
+          </LoopController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Playlist JSON">
+              <stringProp name="HTTPSampler.domain">${wiki_fqdn}</stringProp>
+              <stringProp name="HTTPSampler.path">/content/${video_content_id}/playlists/${extracted_first_playlist_slug}.json</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+              <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract playlist ID">
+                <stringProp name="JSONPostProcessor.referenceNames">first_playlist_slug</stringProp>
+                <stringProp name="JSONPostProcessor.jsonPathExprs">firstPlaylist</stringProp>
+                <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                <stringProp name="TestPlan.comments">Extract slug of first playlist (the one containing all videos) from channel.json</stringProp>
+                <stringProp name="JSONPostProcessor.defaultValues">FIRST-PLAYLIST-MISSING</stringProp>
+              </JSONPostProcessor>
+              <hashTree/>
+            </hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Random Video slug">
+              <stringProp name="JSONPostProcessor.referenceNames">extracted_video_slug</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.videos[*].slug</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
+              <stringProp name="TestPlan.comments">Extract slug of a random video from the playlist</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">VIDEO-SLUG-MISSING</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Set video slug extracted data">
+              <stringProp name="BeanShellSampler.query">vars.put(&quot;video_slug&quot;, vars.get(&quot;extracted_video_slug&quot;));</stringProp>
+            </BeanShellSampler>
+            <hashTree/>
+            <SystemSampler guiclass="SystemSamplerGui" testclass="SystemSampler" testname="Stream video">
+              <boolProp name="SystemSampler.checkReturnCode">true</boolProp>
+              <stringProp name="SystemSampler.expectedReturnCode">0</stringProp>
+              <stringProp name="SystemSampler.command">/root/.local/bin/uv</stringProp>
+              <elementProp name="SystemSampler.arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">run</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">stream</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">--ifname</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">${ifname}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">--content-id</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">${video_content_id}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">--play-duration</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">${__Random(${stream_min_seconds},${stream_max_seconds}, stream_rand_seconds)}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                  <elementProp name="" elementType="Argument">
+                    <stringProp name="Argument.name"></stringProp>
+                    <stringProp name="Argument.value">${video_slug}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <elementProp name="SystemSampler.environment" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+              <stringProp name="SystemSampler.directory">/src</stringProp>
+              <stringProp name="SystemSampler.stdout">stream-${ifname}.txt</stringProp>
+            </SystemSampler>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Text" enabled="true">
+          <stringProp name="IfController.condition">${__groovy(&quot;${group70}&quot;==&quot;true&quot;)}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop on ZIM actions">
+            <stringProp name="LoopController.loops">${nb_pages_per_user}</stringProp>
+          </LoopController>
+          <hashTree>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If reading an article">
+              <stringProp name="IfController.condition">${__groovy(&quot;${__RandomFromMultipleVars(action_read|action_suggest|action_search, action)}&quot;==&quot;read&quot;)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+              <stringProp name="TestPlan.comments">computing action and storing in action var</stringProp>
+            </IfController>
+            <hashTree/>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If using suggestions">
+              <stringProp name="IfController.condition">${__groovy(&quot;${action}&quot;==&quot;suggest&quot;)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
+            <hashTree>
+              <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Couple times">
+                <stringProp name="LoopController.loops">${nb_suggestion_attempts}</stringProp>
+              </LoopController>
+              <hashTree>
+                <SystemSampler guiclass="SystemSamplerGui" testclass="SystemSampler" testname="Get suggestion term">
+                  <boolProp name="SystemSampler.checkReturnCode">true</boolProp>
+                  <stringProp name="SystemSampler.expectedReturnCode">0</stringProp>
+                  <stringProp name="SystemSampler.command">/root/.local/bin/uv</stringProp>
+                  <elementProp name="SystemSampler.arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="" elementType="Argument">
+                        <stringProp name="Argument.name"></stringProp>
+                        <stringProp name="Argument.value">run</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="" elementType="Argument">
+                        <stringProp name="Argument.name"></stringProp>
+                        <stringProp name="Argument.value">randterm</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                      <elementProp name="" elementType="Argument">
+                        <stringProp name="Argument.name"></stringProp>
+                        <stringProp name="Argument.value">suggestion</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                  <elementProp name="SystemSampler.environment" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                    <collectionProp name="Arguments.arguments"/>
+                  </elementProp>
+                  <stringProp name="SystemSampler.directory">/src</stringProp>
+                  <longProp name="SystemSampler.timeout">60000</longProp>
+                </SystemSampler>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract suggestion term">
+                  <stringProp name="JSONPostProcessor.referenceNames">extracted_sugestion_term</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">term</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">SUGGESTION-TERM-MISSING</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+                <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Query suggestion">
+                  <boolProp name="HTTPSampler.image_parser">true</boolProp>
+                  <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+                  <stringProp name="HTTPSampler.domain">${wiki_fqdn}</stringProp>
+                  <stringProp name="HTTPSampler.path">/suggest</stringProp>
+                  <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                  <stringProp name="HTTPSampler.method">GET</stringProp>
+                  <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                  <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+                  <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                    <collectionProp name="Arguments.arguments">
+                      <elementProp name="content" elementType="HTTPArgument">
+                        <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                        <stringProp name="Argument.value">${wiki_content_id}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                        <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                        <stringProp name="Argument.name">content</stringProp>
+                      </elementProp>
+                      <elementProp name="userlang" elementType="HTTPArgument">
+                        <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                        <stringProp name="Argument.value">en</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                        <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                        <stringProp name="Argument.name">userlang</stringProp>
+                      </elementProp>
+                      <elementProp name="loop-index" elementType="HTTPArgument">
+                        <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                        <stringProp name="Argument.value">${__jm__Loop on ZIM actions__idx}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                        <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                        <stringProp name="Argument.name">loop-index</stringProp>
+                      </elementProp>
+                      <elementProp name="term" elementType="HTTPArgument">
+                        <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                        <stringProp name="Argument.value">${extracted_sugestion_term}</stringProp>
+                        <stringProp name="Argument.metadata">=</stringProp>
+                        <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                        <stringProp name="Argument.name">term</stringProp>
+                      </elementProp>
+                    </collectionProp>
+                  </elementProp>
+                </HTTPSamplerProxy>
+                <hashTree>
+                  <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200 OK">
+                    <collectionProp name="Asserion.test_strings">
+                      <stringProp name="49586">200</stringProp>
+                    </collectionProp>
+                    <stringProp name="Assertion.custom_message">not 200</stringProp>
+                    <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                    <boolProp name="Assertion.assume_success">true</boolProp>
+                    <intProp name="Assertion.test_type">40</intProp>
+                  </ResponseAssertion>
+                  <hashTree/>
+                </hashTree>
+              </hashTree>
+            </hashTree>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If using search">
+              <stringProp name="IfController.condition">${__groovy(&quot;${action}&quot;==&quot;search&quot;)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
+            <hashTree>
+              <SystemSampler guiclass="SystemSamplerGui" testclass="SystemSampler" testname="Get search term">
+                <boolProp name="SystemSampler.checkReturnCode">true</boolProp>
+                <stringProp name="SystemSampler.expectedReturnCode">0</stringProp>
+                <stringProp name="SystemSampler.command">/root/.local/bin/uv</stringProp>
+                <elementProp name="SystemSampler.arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="Argument">
+                      <stringProp name="Argument.name"></stringProp>
+                      <stringProp name="Argument.value">run</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Argument">
+                      <stringProp name="Argument.name"></stringProp>
+                      <stringProp name="Argument.value">randterm</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Argument">
+                      <stringProp name="Argument.name"></stringProp>
+                      <stringProp name="Argument.value">search</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <elementProp name="SystemSampler.environment" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                  <collectionProp name="Arguments.arguments"/>
+                </elementProp>
+                <stringProp name="SystemSampler.directory">/src</stringProp>
+                <longProp name="SystemSampler.timeout">60000</longProp>
+              </SystemSampler>
+              <hashTree/>
+              <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract search term">
+                <stringProp name="JSONPostProcessor.referenceNames">extracted_search_term</stringProp>
+                <stringProp name="JSONPostProcessor.jsonPathExprs">term</stringProp>
+                <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                <stringProp name="JSONPostProcessor.defaultValues">SUGGESTION-TERM-MISSING</stringProp>
+              </JSONPostProcessor>
+              <hashTree/>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Query search">
+                <boolProp name="HTTPSampler.image_parser">true</boolProp>
+                <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+                <stringProp name="HTTPSampler.domain">${wiki_fqdn}</stringProp>
+                <stringProp name="HTTPSampler.path">/search</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="content" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                      <stringProp name="Argument.value">${wiki_content_id}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                      <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                      <stringProp name="Argument.name">content</stringProp>
+                    </elementProp>
+                    <elementProp name="pattern" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">${extracted_search_term}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                      <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                      <stringProp name="Argument.name">pattern</stringProp>
+                    </elementProp>
+                    <elementProp name="userlang" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">en</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                      <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                      <stringProp name="Argument.name">userlang</stringProp>
+                    </elementProp>
+                    <elementProp name="loop-index" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">${__jm__Loop on ZIM actions__idx}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                      <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                      <stringProp name="Argument.name">loop-index</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200/404 OK">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49586">200</stringProp>
+                    <stringProp name="51512">404</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message">not 200 nor 404</stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">true</boolProp>
+                  <intProp name="Assertion.test_type">34</intProp>
+                  <stringProp name="TestPlan.comments">Some ZIMs (phet) have no full-text index and thus search on them raises 404</stringProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+                <intProp name="ActionProcessor.action">1</intProp>
+                <intProp name="ActionProcessor.target">0</intProp>
+                <stringProp name="ActionProcessor.duration">0</stringProp>
+              </TestAction>
+              <hashTree>
+                <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause">
+                  <stringProp name="ConstantTimer.delay">${search_min_ms}</stringProp>
+                  <stringProp name="RandomTimer.range">${search_max_ms}</stringProp>
+                </UniformRandomTimer>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Read random article">
+              <boolProp name="HTTPSampler.image_parser">true</boolProp>
+              <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+              <stringProp name="HTTPSampler.domain">${wiki_fqdn}</stringProp>
+              <stringProp name="HTTPSampler.path">/random</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="content" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                    <stringProp name="Argument.value">${wiki_content_id}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                    <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                    <stringProp name="Argument.name">content</stringProp>
+                  </elementProp>
+                  <elementProp name="loop-index" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">${__jm__Loop on ZIM actions__idx}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                    <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                    <stringProp name="Argument.name">loop-index</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200/302/404 OK">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="49586">200</stringProp>
+                  <stringProp name="50549">302</stringProp>
+                  <stringProp name="51512">404</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message">not 200 nor 302 nor 404</stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                <boolProp name="Assertion.assume_success">true</boolProp>
+                <intProp name="Assertion.test_type">34</intProp>
+                <stringProp name="Assertion.scope">all</stringProp>
+              </ResponseAssertion>
+              <hashTree/>
+            </hashTree>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time">
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">0</stringProp>
+            </TestAction>
+            <hashTree>
+              <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause">
+                <stringProp name="ConstantTimer.delay">${read_min_ms}</stringProp>
+                <stringProp name="RandomTimer.range">${read_max_ms}</stringProp>
+              </UniformRandomTimer>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Query dashboard">
+          <stringProp name="TestPlan.comments">Access Hotspot Dashboard</stringProp>
+          <boolProp name="HTTPSampler.concurrentDwn">true</boolProp>
+          <intProp name="HTTPSampler.concurrentPool">6</intProp>
+          <stringProp name="HTTPSampler.domain">${fqdn}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+          <stringProp name="HTTPSampler.path">/</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="200 OK">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message">not 200</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+            <stringProp name="Assertion.scope">all</stringProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">results.csv</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="false">
+        <boolProp name="ResultCollector.error_logging">true</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>true</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>true</responseData>
+            <samplerData>true</samplerData>
+            <xml>true</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>true</responseHeaders>
+            <requestHeaders>true</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <fileName>true</fileName>
+            <hostname>true</hostname>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">results-debug.xml</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="false">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">graph-data.csv</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultSaver guiclass="ResultSaverGui" testclass="ResultSaver" testname="Save Responses to a file" enabled="false">
+        <stringProp name="FileSaver.filename"></stringProp>
+        <boolProp name="FileSaver.errorsonly">false</boolProp>
+        <boolProp name="FileSaver.successonly">false</boolProp>
+        <boolProp name="FileSaver.skipsuffix">false</boolProp>
+        <boolProp name="FileSaver.skipautonumber">false</boolProp>
+        <boolProp name="FileSaver.addTimstamp">true</boolProp>
+      </ResultSaver>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

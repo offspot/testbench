@@ -52,3 +52,45 @@ def stream():
         logger.error(f"General failure: {exc!s}")
         logger.exception(exc)
     sys.exit(1)
+
+
+def randterm():
+    parser = argparse.ArgumentParser(prog="randterm")
+    parser.add_argument(
+        help="Which kind of term to get?", dest="kind", choices=RANDTERM_KINDS
+    )
+
+    args = parser.parse_args(sys.argv[1:])
+    # ignore unset values in order to not override Context defaults
+    args_dict = {key: value for key, value in args._get_kwargs() if value}
+
+    try:
+        sys.exit(randterm_main(**args_dict))
+    except Exception as exc:
+        logger.error(f"General failure: {exc!s}")
+        logger.exception(exc)
+    sys.exit(1)
+
+
+def gensugg():
+    parser = argparse.ArgumentParser(prog="gensugg")
+    parser.add_argument(
+        "--path", help="File to write suggestions to", dest="fpath", type=Path
+    )
+    parser.add_argument(
+        "--len",
+        help="Length (in characters) for the longest suggestions to gen",
+        dest="max_len",
+        type=int,
+    )
+
+    args = parser.parse_args(sys.argv[1:])
+    # ignore unset values in order to not override Context defaults
+    args_dict = {key: value for key, value in args._get_kwargs() if value}
+
+    try:
+        sys.exit(gen_suggestions(**args_dict))
+    except Exception as exc:
+        logger.error(f"General failure: {exc!s}")
+        logger.exception(exc)
+    sys.exit(1)
