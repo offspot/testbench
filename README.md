@@ -177,6 +177,15 @@ Downloads a *large* (100MB) file
 
 See `contrib/dlspeed_results.py` to extract results.
 
+### stream-video
+
+Streams a youtube2zim video.
+
+See `contrib/stream_results.py` to extract results.
+
+### usage1
+
+Regular Hotspot usage scenario: potential video stream (30% chance), ZIM reading, suggestion, search
 
 ## Notes
 
