@@ -4,7 +4,7 @@ import statistics
 import sys
 from pathlib import Path
 
-from humanfriendly import format_size
+from humanfriendly import format_size, format_timespan
 
 from testbench.utils.misc import format_speed
 
@@ -89,14 +89,17 @@ def main(folder: Path) -> int:
     print(
         f"Average speed: {format_speed(download_size, statistics.mean(durations))} "
         f"({format_speed(download_size, statistics.mean(durations), bps=True)})"
+        f", {format_timespan(statistics.mean(durations))}"
     )
     print(
         f"Max speed: {format_speed(download_size, min(durations))} "
         f"({format_speed(download_size, min(durations), bps=True)})"
+        f", {format_timespan(min(durations))}"
     )
     print(
         f"Min speed: {format_speed(download_size, max(durations))} "
         f"({format_speed(download_size, max(durations), bps=True)})"
+        f", {format_timespan(max(durations))}"
     )
     if not failure_ifnames:
         comb_size = download_size * len(ifnames)
