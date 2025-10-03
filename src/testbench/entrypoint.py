@@ -148,17 +148,35 @@ def prepare_context(raw_args: list[str]) -> None:
         required=False,
     )
 
-    perf_parser = subparsers.add_parser(
-        "perf",
-        help="Query the testbench host for its status "
-        "(number of available WiFi devices, mostly)",
+    jmeter_parser = subparsers.add_parser(
+        "jmeter", help="Run JMeter test plan over a number of WiFi devices"
     )
 
-    perf_parser.add_argument(
-        "--jmx", help="Path to own JMX file", type=Path, default=None, dest="jmx_path"
+    jmeter_parser.add_argument(
+        "--ssid",
+        help="SSID of network to connect to (Offspot SSID)",
+        dest="ssid",
+        default=Context.ssid,
+        required=False,
     )
 
-    perf_parser.add_argument(
+    jmeter_parser.add_argument(
+        "--passphrase",
+        help="WPA2 Passphrase of network to connect to",
+        dest="passphrase",
+        default=Context.passphrase,
+        required=False,
+    )
+
+    jmeter_parser.add_argument(
+        "--jmx",
+        help="Name of bundled JMX in testbench or Path to your own JMX file",
+        type=Path,
+        default="basic-http",
+        dest="jmx_path",
+    )
+
+    jmeter_parser.add_argument(
         "--assume-online",
         help="Whether target device is assumed to be online or not",
         action="store_true",
@@ -167,7 +185,7 @@ def prepare_context(raw_args: list[str]) -> None:
         required=False,
     )
 
-    perf_parser.add_argument(
+    jmeter_parser.add_argument(
         "--content-id",
         help="Hotspot ident of ZIM content to query",
         dest="content_id",
@@ -175,19 +193,37 @@ def prepare_context(raw_args: list[str]) -> None:
         required=False,
     )
 
+    def kvt(key_value: str) -> tuple[str, str]:
+        try:
+            parts = [item.strip() for item in key_value.split(":", 1)]
+            return parts[0], parts[1]
+        except Exception as exc:
+            raise argparse.ArgumentTypeError("Invalid format for key:value") from exc
+
+    jmeter_parser.add_argument(
+        "--kv",
+        action="append",
+        default=[],
+        type=kvt,
+        help="key:value pairs of User Defined Variables, passed to JMeter",
+        dest="user_values",
+        required=False,
+    )
+
     args = parser.parse_args(raw_args)
     # ignore unset values in order to not override Context defaults
     args_dict = {key: value for key, value in args._get_kwargs() if value}
 
+    args_dict["user_values"] = dict(args_dict.get("user_values", []))
     Context.setup(**args_dict)
 
 
 def main() -> int:
-    debug = Context.debug
+    # debug = Context.debug
     try:
         prepare_context(sys.argv[1:])
         context = Context.get()
-        debug = context.debug
+        # debug = context.debug
 
         # late import as to have an initialized Context
         match context.command:
@@ -198,8 +234,8 @@ def main() -> int:
             case "integration":
                 from testbench.cli.integration import main as main_prog
 
-            case "perf":
-                from testbench.cli.perf import main as main_prog
+            case "jmeter":
+                from testbench.cli.jmeter import main as main_prog
             case _:
                 return 1
 
@@ -215,8 +251,7 @@ def main() -> int:
         return main_prog()
     except Exception as exc:
         logger.error(f"General failure: {exc!s}")
-        if debug:
-            logger.exception(exc)
+        logger.exception(exc)
         return 1
 
 

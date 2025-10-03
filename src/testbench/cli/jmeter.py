@@ -17,6 +17,10 @@ context = Context.get()
 logger = context.logger
 
 
+def format_percent(value: int, nb_rows: int) -> str:
+    return f"{format_number(value * 100 / nb_rows, 2)}%"
+
+
 @dataclass
 class Result:
     nb_success: int
@@ -50,17 +54,31 @@ def main() -> int:
     with Halo(
         text=f"Connecting {all_wireless_devices.count} devices", spinner="dots"
     ) as spinner:
-        for device in all_wireless_devices.devices:
-            logger.debug(f"Connecting {device.ifname}")
-            assert (  # noqa: S101
-                connect_device(
-                    device.ifname, ssid=context.ssid, passphrase=context.passphrase
-                ).returncode
-                == 0
+        reset_connections()
+        try:
+            for index, device in enumerate(all_wireless_devices.devices):
+                logger.debug(f"Connecting {device.ifname}")
+                if (
+                    connect_device(
+                        device.ifname,
+                        ssid=context.ssid,
+                        passphrase=context.passphrase,
+                    ).returncode
+                    != 0
+                ):
+                    raise OSError(
+                        f"Unable to connect {device.ifname} "
+                        f"[{index}/{len(all_wireless_devices.devices)}]"
+                    )
+            spinner.succeed(  # pyright: ignore[reportUnknownMemberType]
+                f"Connected {all_wireless_devices.count} devices"
             )
-        spinner.succeed(  # pyright: ignore[reportUnknownMemberType]
-            f"Connected {all_wireless_devices.count} devices"
-        )
+        except Exception as exc:
+            spinner.fail(  # pyright: ignore[reportUnknownMemberType]
+                f"Unable to connect {all_wireless_devices.count} devices"
+            )
+            reset_connections()
+            raise exc
 
     with Halo(text="Starting JMeter", spinner="dots") as spinner:
 
@@ -69,6 +87,7 @@ def main() -> int:
             ifnames=[device.ifname for device in all_wireless_devices.devices],
             assume_online="true" if context.assume_online else "false",
             content_id=context.content_id,
+            user_values=context.user_values,
         )
         jmeter.start()
         spinner.succeed(  # pyright: ignore[reportUnknownMemberType]
@@ -96,9 +115,7 @@ def main() -> int:
         )
 
     if not jmeter.succeeded:
-        return jmeter.ps.returncode
-
-    click.echo(f"Results in {jmeter.results_csv_path}")
+        return jmeter.ps.returncode or 1
 
     def get_ifname_from_threadname(name: str) -> str:
         m = re.match(r"Users 1-(?P<num>\d+){1,2}", name)
@@ -140,6 +157,7 @@ def main() -> int:
     click.echo("")
     click.echo("Results by Iface")
 
+    total = {"success": 0, "failure": 0}
     ifnames_table = PrettyTable(
         field_names=["Iface", "Success", "Failure", "Success rate"]
     )
@@ -147,6 +165,20 @@ def main() -> int:
         ifnames_table.add_row(
             [ifname, results.nb_success, results.nb_failed, results.percent]
         )
+        total["success"] += results.nb_success
+        total["failure"] += results.nb_failed
+    ifnames_table.add_row(
+        [
+            "Total",
+            total["success"],
+            total["failure"],
+            format_percent(total["success"], sum(total.values())),
+        ]
+    )
     click.echo(ifnames_table.get_string())  # pyright: ignore [reportUnknownMemberType]
+
+    click.echo(
+        f"Results in {jmeter.results_csv_path} ({jmeter.results_csv_path.parent.name})"
+    )
 
     return 0

@@ -29,7 +29,8 @@ DEFAULT_ASSUME_ONLINE: bool = False
 DEFAULT_CONTENT_ID: str = ""
 
 DEFAULT_DB_PATH: Path = Path("testbench.db")
-DEFAULT_JMX_PATH: Path = Path(__file__).parent.joinpath("perf.jmx").resolve()
+DEFAULT_JMX_FOLDER: Path = Path(__file__).parent.parent.parent.joinpath("jmx")
+DEFAULT_JMX_PATH: Path = DEFAULT_JMX_FOLDER.joinpath("basic-http.jmx").resolve()
 DEFAULT_DHCP_TIMEOUT: int = 20
 
 
@@ -53,6 +54,7 @@ class Context:
 
     # database
     db_path: Path = DEFAULT_DB_PATH
+    jmx_folder: Path = DEFAULT_JMX_FOLDER
     jmx_path: Path = DEFAULT_JMX_PATH
 
     # e2e params
@@ -70,6 +72,7 @@ class Context:
     dns_captured_address: IPv4Address = DEFAULT_DNS_CAPTURED_DOMAIN_IP
     assume_online: bool = DEFAULT_ASSUME_ONLINE
     content_id: str = DEFAULT_CONTENT_ID
+    user_values: dict[str, str] = field(default_factory=dict[str, str])
 
     logger: logging.Logger = logging.getLogger(NAME)  # noqa: RUF009
 
@@ -87,6 +90,11 @@ class Context:
                 "synchronous": 0,
             },
         )
+        infolder_jmx_path = self.jmx_folder.joinpath(
+            f"{self.jmx_path.name}.jmx"
+        ).resolve()
+        if not self.jmx_path.resolve().exists() and infolder_jmx_path.exists():
+            self.jmx_path = infolder_jmx_path
 
     @property
     def fqdn(self) -> str:

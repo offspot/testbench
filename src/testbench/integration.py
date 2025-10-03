@@ -368,6 +368,9 @@ def run_for_ifname(
                 feedback=str(exc),
                 name=test_cls.name,
             )
+        else:
+            if not res.succeeded:
+                skip = True
         finally:
             stack.put(item=res)  # pyright: ignore [reportPossiblyUnboundVariable]
 
@@ -450,7 +453,6 @@ class IntegrationTestsRunner:
         except TimeoutError:
             return None
         finally:
-
             # an empty futures list means we are done processing
             if not self.futures:
                 self.running = False

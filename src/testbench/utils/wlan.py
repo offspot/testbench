@@ -98,6 +98,12 @@ class WirelessDevice:
         return self.ip4
 
     @classmethod
+    def from_ifname(cls, ifname: str) -> Self:
+        return cls.from_nmshow(
+            payload=nmdevice.show(ifname=ifname, fields=",".join(NMSHOW_FIELDS))
+        )
+
+    @classmethod
     def from_nmshow(cls, payload: dict[str, str | None]) -> Self:
         return cls(
             ifname=str(payload["GENERAL.DEVICE"]),

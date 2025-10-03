@@ -214,3 +214,5 @@ pyrightconfig.json
 uv.lock
 
 jmeter_*
+.idea/
+*.orig

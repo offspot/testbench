@@ -5,10 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "offspot-testbench"
 # meant to run on raspbian (current is 3.11.2)
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.11,<3.14"
 description = "Offspot testbench utils"
 readme = "README.md"
 dependencies = [
+    "attrs==25.3.0",
     "icmplib==3.0.4",
     "nmcli==1.5.0",
     "types-requests>=2.32.0.20250328",
@@ -36,7 +37,7 @@ lint = [
   "ruff==0.11.6",
 ]
 check = [
-  "pyright==1.1.400",
+  "pyright==1.1.406",
 ]
 test = [
   "pytest==8.3.5",
@@ -55,7 +56,10 @@ dev = [
 testbench = "testbench.entrypoint:entrypoint"
 list-devices = "testbench.hw:entrypoint"
 max-wlan = "testbench.wlan:entrypoint"
-disconnect-all = "testbench.wlan:disconnect_all_devices"
+disconnect-all = "testbench.utils.wlan:reset_connections"
+stream = "testbench.scripts.entrypoints:stream"
+randterm = "testbench.scripts.entrypoints:randterm"
+gensugg = "testbench.scripts.entrypoints:gensugg"
 
 [tool.hatch.version]
 path = "src/testbench/__about__.py"
@@ -69,13 +73,15 @@ exclude = [
 packages = ["src/testbench"]
 
 [tool.hatch.build.targets.sdist.force-include]
-"src/testbench/perf.jmx" = "testbench/perf.jmx"
+"jmx/basic-http.jmx" = "testbench/jmx/basic-http.jmx"
+"jmx/dl-speed.jmx" = "testbench/jmx/dl-speed.jmx"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/testbench"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"src/testbench/perf.jmx" = "testbench/perf.jmx"
+"jmx/basic-http.jmx" = "testbench/jmx/basic-http.jmx"
+"jmx/dl-speed.jmx" = "testbench/jmx/dl-speed.jmx"
 
 [tool.hatch.envs.default]
 features = ["dev"]
@@ -84,7 +90,7 @@ features = ["dev"]
 features = ["scripts", "test"]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11"]
+python = ["3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.test.scripts]
 run = "inv test --args '{args}'"
