@@ -37,7 +37,7 @@ lint = [
   "ruff==0.11.6",
 ]
 check = [
-  "pyright==1.1.405",
+  "pyright==1.1.406",
 ]
 test = [
   "pytest==8.3.5",
@@ -56,8 +56,10 @@ dev = [
 testbench = "testbench.entrypoint:entrypoint"
 list-devices = "testbench.hw:entrypoint"
 max-wlan = "testbench.wlan:entrypoint"
-disconnect-all = "testbench.wlan:disconnect_all_devices"
+disconnect-all = "testbench.utils.wlan:reset_connections"
 stream = "testbench.scripts.entrypoints:stream"
+randterm = "testbench.scripts.entrypoints:randterm"
+gensugg = "testbench.scripts.entrypoints:gensugg"
 
 [tool.hatch.version]
 path = "src/testbench/__about__.py"
