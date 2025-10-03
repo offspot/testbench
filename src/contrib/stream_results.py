@@ -75,6 +75,7 @@ def main(folder: Path) -> int:
                 continue
             return getattr(result, prop)
         return -1
+
     filesize = int(get_from_results("filesize"))
     video_duration = get_from_results("video_duration")
     print(f"Video size: {format_size(filesize)}")
