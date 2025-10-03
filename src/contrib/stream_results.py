@@ -49,7 +49,6 @@ def read_stream(fpath: Path) -> StreamResult:
             match = re.match(process[1], line)
             if match:
                 setattr(result, varname, process[0](match.groupdict()["value"]))
-
     return result
 
 
@@ -70,11 +69,17 @@ def main(folder: Path) -> int:
             stream.exit = int(row["responseCode"])
             results.append(stream)
 
-    filesize = results[0].filesize
-    video_duration = results[0].video_duration
+    def get_from_results(prop: str) -> int | float:
+        for result in results:
+            if getattr(result, prop, -1) == -1:
+                continue
+            return getattr(result, prop)
+        return -1
+    filesize = int(get_from_results("filesize"))
+    video_duration = get_from_results("video_duration")
     print(f"Video size: {format_size(filesize)}")
     print(f"Video duration: {format_timespan(video_duration)}")
-    durations = [res.duration for res in results]
+    durations = [res.duration for res in results if res.duration >= 0]
     print(
         "Max speed",
         format_speed(filesize, min(durations)),
@@ -90,7 +95,7 @@ def main(folder: Path) -> int:
         format_speed(filesize, statistics.mean(durations)),
         f"({format_speed(filesize, statistics.mean(durations), bps=True)})",
     )
-    frozes = [res.frozed for res in results if res.frozed]
+    frozes = [res.frozed for res in results if res.frozed > 0]
     if frozes:
         print("Min non-zero freeze", format_timespan(min(frozes)))
         print("Max non-zero freeze", format_timespan(max(frozes)))
